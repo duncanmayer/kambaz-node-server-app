@@ -1,33 +1,21 @@
-import Database from "../Database/index.js";
 import { v4 as uuidv4 } from "uuid";
+import model from "./model.js";
 
-export function deleteAssignment(assignmentId) {
-  const { assignments } = Database;
-  Database.assignments = assignments.filter((assgn) => assgn._id !== assignmentId);
-}
+export const deleteAssignment = (assignmentId) => model.deleteOne({ _id: assignmentId });
 
-export function createAssignment(assignment) {
+export const createAssignment = (assignment) => {
+  // delete user._id;
   const newAssignment = { ...assignment, _id: uuidv4() };
-  Database.assignments = [...Database.assignments, newAssignment];
-  return newAssignment;
+  return model.create(newAssignment);
+};
+
+export const findAssignmentsForCourse = (courseId) => {
+  return model.find({ course: courseId });
 }
 
-export function findAssignmentsForCourse(courseId) {
-  const { assignments } = Database;
-  return assignments.filter((assgn) => assgn.course === courseId);
+export const findAssignmentById = (assignmentId) => {
+  return model.findById(assignmentId);
 }
 
-export function findAssignmentById(assignmentId) {
-    const { assignments } = Database;
-    return assignments.find((assgn) => assgn._id === assignmentId);
-}
-
-export function updateAssignment(assignmentId, assignmentUpdates) {
-  const { assignments } = Database;
-  console.log(`assignmentId : ${assignmentId}`);
-  const assignment = assignments.find((assgn) => assgn._id === assignmentId);
-  console.log(`assignment is : ${JSON.stringify(assignment)}`);
-  console.log(`assignmentUpdates : ${JSON.stringify(assignmentUpdates)}`);
-  Object.assign(assignment, assignmentUpdates);
-  return assignment;
-}
+export const updateAssignment = (assignmentId, assignment) =>
+  model.updateOne({ _id: assignmentId }, { $set: assignment });

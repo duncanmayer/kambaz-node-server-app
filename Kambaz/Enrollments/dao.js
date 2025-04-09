@@ -1,4 +1,4 @@
-import Database from "../Database/index.js";
+// import Database from "../Database/index.js";
 import { v4 as uuidv4 } from "uuid";
 export function enrollUserInCourse(userId, courseId) {
   const { enrollments } = Database;
