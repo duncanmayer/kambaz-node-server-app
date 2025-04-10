@@ -23,13 +23,11 @@ export default function WorkingWithArrays(app) {
     res.json(todo);
   });
   app.get("/lab5/todos/create", (req, res) => {
-    console.log(`Create req is ${req}`);
     const newTodo = {
       id: new Date().getTime(),
       title: "New Task",
       completed: false,
     };
-    console.log(`New todo: ${newTodo}`);
     todos.push(newTodo);
     res.json(todos);
   });
@@ -41,7 +39,6 @@ export default function WorkingWithArrays(app) {
   app.get("/lab5/todos/:id/delete", (req, res) => {
     const { id } = req.params;
     const todoIndex = todos.findIndex((t) => t.id === parseInt(id));
-    console.log(`todoIndex: ${todoIndex}`);
     todos.splice(todoIndex, 1);
     res.json(todos);
   });

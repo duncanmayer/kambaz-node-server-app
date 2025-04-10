@@ -17,5 +17,6 @@ export const findAssignmentById = (assignmentId) => {
   return model.findById(assignmentId);
 }
 
-export const updateAssignment = (assignmentId, assignment) =>
-  model.updateOne({ _id: assignmentId }, { $set: assignment });
+export const updateAssignment = (assignmentId, assignment) => {
+  return model.updateOne({ _id: assignmentId }, { $set: assignment })
+};

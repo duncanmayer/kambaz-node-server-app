@@ -18,7 +18,6 @@ export const findAllCourses = () => model.find();
 
 export const findCoursesForEnrolledUser = async (userId) => {
   const enrollments = await enrollmentModel.find({ user: userId });
-  console.log("enrollments are " + JSON.stringify(enrollments));
 
   const courseIds = enrollments.map((e) => e.course);
 
@@ -27,10 +26,10 @@ export const findCoursesForEnrolledUser = async (userId) => {
 }
 
 
-export const createCourse = (course) => {
-  // delete user._id;
+export const createCourse = async (course) => {
   const newCourse = { ...course, _id: uuidv4() };
-  return model.create(newUser);
+  await model.create(newCourse);
+  return newCourse;
 };
 
 export const deleteCourse = (courseId) => model.deleteOne({ _id: courseId });
