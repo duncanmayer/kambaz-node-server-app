@@ -43,3 +43,10 @@ AssignmentRoutes(app);
 Lab5(app);
 Hello(app);
 app.listen(process.env.PORT || 4000);
+
+console.log({
+  nodeEnv: process.env.NODE_ENV,
+  netlifyUrl: process.env.NETLIFY_URL,
+  serverDomain: process.env.NODE_SERVER_DOMAIN,
+  isProduction: process.env.NODE_ENV !== "development"
+});
