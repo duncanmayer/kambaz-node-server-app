@@ -94,25 +94,56 @@ export default function UserRoutes(app) {
     res.json(newCourse);
   };
 
-  const enrollUserInCourse = async (req, res) => {
-    const userId = req.params.userId;
-    const courseId = req.params.courseId;
-    await enrollmentsDao.enrollUserInCourse(userId, courseId);
-    res.sendStatus(200);
-  };
-  app.put("/api/enrollments/:userId/:courseId", enrollUserInCourse);
-
-  const unenrollUserFromCourse = async (req, res) => {
-    const userId = req.params.userId;
-    const courseId = req.params.courseId;
-    await enrollmentsDao.unenrollUserFromCourse(userId, courseId);
-    res.sendStatus(200);
-  };
-
   const deleteUser = async (req, res) => {
     const status = await dao.deleteUser(req.params.userId);
     res.json(status);
   };
+
+  const findCoursesForUser = async (req, res) => {
+    const currentUser = req.session["currentUser"];
+    if (!currentUser) {
+      res.sendStatus(401);
+      return;
+    }
+    if (currentUser.role === "ADMIN") {
+      const courses = await courseDao.findAllCourses();
+      res.json(courses);
+      return;
+    }
+    let { uid } = req.params;
+    if (uid === "current") {
+      uid = currentUser._id;
+    }
+    const courses = await enrollmentsDao.findCoursesForUser(uid);
+    res.json(courses);
+  };
+
+  const enrollUserInCourse = async (req, res) => {
+    let { uid, cid } = req.params;
+    if (uid === "current") {
+      const currentUser = req.session["currentUser"];
+      uid = currentUser._id;
+    }
+    const status = await enrollmentsDao.enrollUserInCourse(uid, cid);
+    res.send(status);
+  };
+  const unenrollUserFromCourse = async (req, res) => {
+    let { uid, cid } = req.params;
+    if (uid === "current") {
+      const currentUser = req.session["currentUser"];
+      uid = currentUser._id;
+    }
+    const status = await enrollmentsDao.unenrollUserFromCourse(uid, cid);
+    res.send(status);
+  };
+
+
+  app.post("/api/users/:uid/courses/:cid", enrollUserInCourse);
+  app.delete("/api/users/:uid/courses/:cid", unenrollUserFromCourse);
+
+  
+  app.get("/api/users/:uid/courses", findCoursesForUser);
+
   app.delete("/api/users/:userId", deleteUser);
 
   app.delete("/api/enrollments/:userId/:courseId", unenrollUserFromCourse);

@@ -5,17 +5,6 @@ import { v4 as uuidv4 } from "uuid";
 
 export const findAllCourses = () => model.find();
 
-// export function findCoursesForEnrolledUser(userId) {
-//   const { courses, enrollments } = Database;
-//   const enrolledCourses = courses.filter((course) =>
-//     enrollments.some(
-//       (enrollment) =>
-//         enrollment.user === userId && enrollment.course === course._id
-//     )
-//   );
-//   return enrolledCourses;
-// }
-
 export const findCoursesForEnrolledUser = async (userId) => {
   const enrollments = await enrollmentModel.find({ user: userId });
 

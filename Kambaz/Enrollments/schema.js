@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 const enrollmentSchema = new mongoose.Schema(
   {
     _id: String,
-    user: String,
-    course: String,
+    user:  { type: String, ref: "UserModel" },
+    course:  { type: String, ref: "CourseModel" },
   },
   { collection: "enrollments" }
 );
