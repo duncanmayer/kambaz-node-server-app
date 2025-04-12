@@ -98,6 +98,7 @@ export default function UserRoutes(app) {
     const status = await dao.deleteUser(req.params.userId);
     res.json(status);
   };
+  app.delete("/api/users/:userId", deleteUser);
 
   const findCoursesForUser = async (req, res) => {
     const currentUser = req.session["currentUser"];
@@ -117,6 +118,7 @@ export default function UserRoutes(app) {
     const courses = await enrollmentsDao.findCoursesForUser(uid);
     res.json(courses);
   };
+  app.get("/api/users/:uid/courses", findCoursesForUser);
 
   const enrollUserInCourse = async (req, res) => {
     let { uid, cid } = req.params;
@@ -127,6 +129,8 @@ export default function UserRoutes(app) {
     const status = await enrollmentsDao.enrollUserInCourse(uid, cid);
     res.send(status);
   };
+  app.post("/api/users/:uid/courses/:cid", enrollUserInCourse);
+
   const unenrollUserFromCourse = async (req, res) => {
     let { uid, cid } = req.params;
     if (uid === "current") {
@@ -136,15 +140,32 @@ export default function UserRoutes(app) {
     const status = await enrollmentsDao.unenrollUserFromCourse(uid, cid);
     res.send(status);
   };
-
-
-  app.post("/api/users/:uid/courses/:cid", enrollUserInCourse);
   app.delete("/api/users/:uid/courses/:cid", unenrollUserFromCourse);
 
-  
-  app.get("/api/users/:uid/courses", findCoursesForUser);
+  const createUserAnswer = async (req, res) => {
+    const { userId, quizId } = req.params;
+    const quizData = req.body; 
+    // stores userId, quizId, and an array of answers (object w/ questionId and answer)
+    const newScore = await quizzesDao.createUserAnswer(userId, quizId, quizData);
+    res.json(newScore);
+  }
+  app.post("/api/users/:userId/quizzes/:quizId", createUserAnswer);
 
-  app.delete("/api/users/:userId", deleteUser);
+  const findQuizAnswersForUser = async (req, res) => {
+    let { userId, quizId } = req.params;
+    if (userId === "current") {
+      const currentUser = req.session["currentUser"];
+      if (!currentUser) {
+        res.sendStatus(401);
+        return;
+      }
+      userId = currentUser._id;
+    }
+    const answers = await quizzesDao.findQuizAnswersForUser(userId, quizId);
+    res.json(courses);
+  };
+  app.get("/api/users/:uid/quizzes/:quizId", findQuizAnswersForUser);
+
 
   app.delete("/api/enrollments/:userId/:courseId", unenrollUserFromCourse);
 
