@@ -26,8 +26,9 @@ export const createUserAnswer = async (quizId, userId, quizData) => {
   const userAnswer = {
     user: userId,
     quiz: quizId,
-    answered: quizData.answered,
+    answered: quizData,
   };
+//   console.log(JSON.stringify(userAnswer));
   return answersDao.createUserAnswer(userAnswer);
 };
 

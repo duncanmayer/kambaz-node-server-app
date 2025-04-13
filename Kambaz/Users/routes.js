@@ -1,6 +1,7 @@
 import * as dao from "./dao.js";
 import * as courseDao from "../Courses/dao.js";
 import * as enrollmentsDao from "../Enrollments/dao.js";
+import * as quizzesDao from "../Quizzes/dao.js";
 import { unenrollUserFromCourse as _unenrollUserFromCourse } from "../Enrollments/dao.js";
 export default function UserRoutes(app) {
   const createUser = async (req, res) => {
@@ -143,7 +144,15 @@ export default function UserRoutes(app) {
   app.delete("/api/users/:uid/courses/:cid", unenrollUserFromCourse);
 
   const createUserAnswer = async (req, res) => {
-    const { userId, quizId } = req.params;
+    let { userId, quizId } = req.params;
+    if (userId === "current") {
+      const currentUser = req.session["currentUser"];
+      if (!currentUser) {
+        res.sendStatus(401);
+        return;
+      }
+      userId = currentUser._id;
+    }
     const quizData = req.body; 
     // stores userId, quizId, and an array of answers (object w/ questionId and answer)
     const newScore = await quizzesDao.createUserAnswer(userId, quizId, quizData);
