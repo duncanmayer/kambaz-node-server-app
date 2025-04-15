@@ -10,6 +10,7 @@ const answerSchema = new mongoose.Schema(
           chosenAnswer: String
         },
       ],
+      score: Number,
   },
   { collection: "answers" }
 );
