@@ -66,15 +66,36 @@ export default function CourseRoutes(app) {
   };
   app.get("/api/courses/:cid/users", findUsersForCourse);
 
+  /** Quiz Routes **/
 
-
- /** Quiz Routes **/
-
- // Find Course's Quizzes
+  // Find Course's Quizzes
   app.get("/api/courses/:courseId/quizzes", async (req, res) => {
     const { courseId } = req.params;
     const quizzes = await quizzesDao.findQuizzesForCourse(courseId);
     res.json(quizzes);
+  });
+
+  app.get("/api/courses/:courseId/quizzes/search", async (req, res) => {
+    try {
+      const { courseId } = req.params;
+      const { name } = req.query; // Get search term from query params
+
+      console.log("Search request for course:", courseId);
+      console.log("Search term:", name);
+
+      if (!name) {
+        // If no search term, return all quizzes
+        const allQuizzes = await quizzesDao.findQuizzesForCourse(courseId);
+        return res.json(allQuizzes);
+      }
+
+      // Make sure parameters are in the correct order (courseId first, then name)
+      const quizzes = await quizzesDao.findQuizzesByPartialName(courseId, name);
+      res.json(quizzes);
+    } catch (error) {
+      console.error("Error searching quizzes:", error);
+      res.status(500).json({ error: "Search failed" });
+    }
   });
 
   // Find Quiz by ID
