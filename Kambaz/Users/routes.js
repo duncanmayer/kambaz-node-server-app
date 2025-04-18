@@ -176,13 +176,6 @@ export default function UserRoutes(app) {
     }
     const answers = await quizzesDao.findQuizAnswersForUser(userId, quizId);
     res.json(answers);
-    console.log(
-      "finding quiz answers for user " +
-        userId +
-        ". answers are " +
-        JSON.stringify(answers)
-    );
-    res.json(answers);
   };
   app.get("/api/users/:userId/quizzes/:quizId", findQuizAnswersForUser);
 
