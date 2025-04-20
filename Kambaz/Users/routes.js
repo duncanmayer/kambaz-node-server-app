@@ -153,11 +153,15 @@ export default function UserRoutes(app) {
       }
       userId = currentUser._id;
     }
-    const quizData = req.body; 
+    const quizData = req.body;
     // stores userId, quizId, and an array of answers (object w/ questionId and answer)
-    const newScore = await quizzesDao.createUserAnswer(quizId, userId, quizData);
+    const newScore = await quizzesDao.createUserAnswer(
+      quizId,
+      userId,
+      quizData
+    );
     res.json(newScore);
-  }
+  };
   app.post("/api/users/:userId/quizzes/:quizId", createUserAnswer);
 
   const findQuizAnswersForUser = async (req, res) => {
@@ -171,11 +175,9 @@ export default function UserRoutes(app) {
       userId = currentUser._id;
     }
     const answers = await quizzesDao.findQuizAnswersForUser(userId, quizId);
-    console.log("finding quiz answers for user " + userId + ". answers are " + JSON.stringify(answers));
     res.json(answers);
   };
   app.get("/api/users/:userId/quizzes/:quizId", findQuizAnswersForUser);
-
 
   app.delete("/api/enrollments/:userId/:courseId", unenrollUserFromCourse);
 
