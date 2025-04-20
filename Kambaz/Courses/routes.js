@@ -115,4 +115,9 @@ export default function CourseRoutes(app) {
     const newQuiz = await quizzesDao.createQuiz(quiz);
     res.send(newQuiz);
   });
+
+  app.post("/api/courses", async (req, res) => {
+    const course = await dao.createCourse(req.body);
+    res.json(course);
+  });
 }
