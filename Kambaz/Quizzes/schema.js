@@ -26,7 +26,10 @@ const quizSchema = new mongoose.Schema(
     has_time_limit: Boolean,
     time_limit: Number,
     allow_multiple_attempts: Boolean,
-    num_attempts: Number,
+    num_attempts : {
+      type: Number,
+      default: 1,
+    },
     show_correct_answers: Boolean,
     show_correct_answers_date: Date,
     access_code: String,
