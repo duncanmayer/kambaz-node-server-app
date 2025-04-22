@@ -11,14 +11,14 @@ import ModuleRoutes from "./Kambaz/Modules/routes.js";
 import AssignmentRoutes from "./Kambaz/Assignments/routes.js";
 import "dotenv/config";
 
-const CONNECTION_STRING = process.env.DB_CONNECTION_STRING
+const CONNECTION_STRING = "mongodb://localhost:27017/kambaz";
 mongoose.connect(CONNECTION_STRING);
 
 const app = express();
 app.use(
   cors({
     credentials: true,
-    origin: process.env.NETLIFY_URL,
+    origin: "http://localhost:5173",
   })
 );
 const sessionOptions = {
